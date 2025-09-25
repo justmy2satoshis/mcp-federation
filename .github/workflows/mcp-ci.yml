@@ -23,8 +23,8 @@ jobs:
         # TO RE-ENABLE: Uncomment the line below and remove windows-latest line
         # os: [ubuntu-latest, windows-latest, macos-latest]
         os: [windows-latest]
-        node-version: ['18.x', '20.x', '22.x']
-        python-version: ['3.9', '3.10', '3.11']
+        node-version: ['18.x']  # Reduced to single version for faster debugging
+        python-version: ['3.11']  # Reduced to single version for faster debugging
     
     steps:
       - name: Checkout code
@@ -74,6 +74,9 @@ jobs:
           echo "Directory contents:"
           dir
           echo ""
+          echo "Tests directory:"
+          dir tests
+          echo ""
           echo "APPDATA:"
           echo $env:APPDATA
           echo ""
@@ -86,6 +89,15 @@ jobs:
           echo "Node path:"
           where node
         shell: pwsh
+      
+      # Run simple diagnostic test first
+      - name: Run Simple Diagnostic Test (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          echo "Running simple diagnostic test..."
+          python tests/test_windows_simple.py
+        shell: pwsh
+        continue-on-error: true
       
       - name: Run CI Test Wrapper
         run: |
@@ -144,7 +156,11 @@ jobs:
           echo "- Test wrapper: completed" >> test-report.md
           echo "- No test contamination: verified" >> test-report.md
           echo "- Platform: ${{ runner.os }}" >> test-report.md
-          echo "- Timestamp: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss UTC' -AsUTC)" >> test-report.md
+          if ($IsWindows) {
+            echo "- Timestamp: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss UTC')" >> test-report.md
+          } else {
+            echo "- Timestamp: $(date -u +'%Y-%m-%d %H:%M:%S UTC')" >> test-report.md
+          }
         shell: ${{ runner.os == 'Windows' && 'pwsh' || 'bash' }}
       
       - name: Upload test artifacts
