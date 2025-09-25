@@ -1,8 +1,12 @@
-# Python
+# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
+
+# C extensions
 *.so
+
+# Distribution / packaging
 .Python
 build/
 develop-eggs/
@@ -21,141 +25,64 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
-.pytest_cache/
-.coverage
-.coverage.*
-.cache
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
 htmlcov/
 .tox/
 .nox/
-.hypothesis/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
 *.cover
-*.log
-.mypy_cache/
-.dmypy.json
-dmypy.json
-.pyre/
-.pytype/
-.pdm.toml
-__pypackages__/
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
 
-# Node.js
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-lerna-debug.log*
-.pnpm-debug.log*
-.npm
-.yarn-integrity
-.node_repl_history
-*.tgz
-.yarn-cache
-.yarn-unplugged
-.yarn-build-state.yml
-.yarn-install-state.gz
-.pnp.*
-
-# Environment variables
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-.venv
-env/
+# Virtual environments
 venv/
 ENV/
-env.bak/
-venv.bak/
+env/
+.venv
 
-# IDE
+# IDEs
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
 .DS_Store
-Thumbs.db
-*.sublime-project
-*.sublime-workspace
 
-# Testing
-coverage/
-.nyc_output/
-test-results/
-junit.xml
-test-report.xml
-
-# CI/CD artifacts
-.secrets.baseline
-security-reports/
-benchmark-results/
-*.sarif
-
-# MCP specific
-mcp-servers/
-claude_desktop_config.json.backup
-*.mcp.log
-.mcp-cache/
-
-# OS
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-desktop.ini
-
-# Temporary files
-*.tmp
-*.temp
-*.bak
-*.swp
-*.orig
-*~
-
-# Archives
-*.7z
-*.dmg
-*.gz
-*.iso
-*.jar
-*.rar
-*.tar
-*.zip
-
-# Logs
-logs/
+# Project specific
 *.log
+*.tmp
+.mcp-federation/
+backup_*.json
+
+# Node
+node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-pnpm-debug.log*
 
-# Lock files (keep package-lock.json)
-yarn.lock
-pnpm-lock.yaml
+# Test artifacts
+test-report.md
+test-results/
+*.test.json
 
-# Documentation build
-docs/_build/
-site/
+# Security scan
+.secrets.baseline
 
-# Database
-*.db
-*.sqlite
-*.sqlite3
-
-# Credentials (never commit these)
-*.pem
-*.key
-*.crt
-*.p12
-*_rsa
-*_dsa
-*_ecdsa
-*_ed25519
-credentials.json
-token.json
+# CI/CD artifacts
+artifacts/
+.github/workflows/*.log
