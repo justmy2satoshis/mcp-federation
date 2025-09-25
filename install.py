@@ -9,6 +9,7 @@ import json
 import os
 import platform
 import shutil
+import subprocess
 import sys
 import time
 from datetime import datetime
@@ -371,7 +372,7 @@ class MCPInstaller:
         print(f"\n{Colors.OKCYAN}Installation Summary:{Colors.ENDC}")
         print(f"  • Newly installed: {len(self.installed_by_us)} MCPs")
         print(f"  • Already existed: {len(self.already_existed)} MCPs")
-        print(f"  • Total MCPs now: {len(merged_config.get('mcpServers', {}))}")
+        print(f"  • Total MCPs now: {len(merged_config.get('mcpServers', {}))} ")
         
         if self.installed_by_us:
             print(f"\n{Colors.OKCYAN}Newly installed MCPs:{Colors.ENDC}")
