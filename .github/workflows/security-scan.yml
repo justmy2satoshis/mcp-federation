@@ -118,8 +118,8 @@ jobs:
           # Scan for secrets
           detect-secrets scan --baseline .secrets.baseline --exclude-files '.*\.md$' > secrets-scan.json
           
-          # Check for new secrets
-          if detect-secrets audit .secrets.baseline; then
+          # Check for new secrets - ADD --no-input FLAG HERE
+          if detect-secrets audit .secrets.baseline --no-input; then
             echo "✅ No hardcoded secrets detected" >> secrets-report.md
           else
             echo "❌ Potential secrets detected!" >> secrets-report.md
