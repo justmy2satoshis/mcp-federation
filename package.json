@@ -1,11 +1,11 @@
 {
   "name": "mcp-federation-pro",
-  "version": "1.0.0",
-  "description": "Professional MCP installer suite with automated CI/CD validation",
+  "version": "2.1.0",
+  "description": "Professional MCP Installer Suite for Claude Desktop",
   "main": "install.py",
   "scripts": {
-    "test": "echo \"Tests run via Python pytest\" && exit 0",
-    "lint": "echo \"Linting via Python flake8\" && exit 0"
+    "test": "python tests/test_installer_ci.py",
+    "test:simple": "python tests/test_windows_simple.py"
   },
   "repository": {
     "type": "git",
@@ -13,12 +13,12 @@
   },
   "keywords": [
     "mcp",
-    "model-context-protocol",
     "claude",
-    "ai",
-    "installer"
+    "claude-desktop",
+    "installer",
+    "model-context-protocol"
   ],
-  "author": "MCP Federation Pro Contributors",
+  "author": "justmy2satoshis",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/justmy2satoshis/mcp-federation-pro/issues"
@@ -26,6 +26,9 @@
   "homepage": "https://github.com/justmy2satoshis/mcp-federation-pro#readme",
   "engines": {
     "node": ">=18.0.0",
-    "npm": ">=8.0.0"
-  }
+    "npm": ">=8.0.0",
+    "python": ">=3.9.0"
+  },
+  "devDependencies": {},
+  "dependencies": {}
 }
