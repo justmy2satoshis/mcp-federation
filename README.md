@@ -1,209 +1,149 @@
 # MCP Federation Pro 🚀
 
-[![CI/CD Pipeline](https://github.com/justmy2satoshis/mcp-federation-pro/workflows/MCP%20Federation%20CI%2FCD%20Pipeline/badge.svg)](https://github.com/justmy2satoshis/mcp-federation-pro/actions)
-[![Security Scan](https://github.com/justmy2satoshis/mcp-federation-pro/workflows/Security%20%26%20Vulnerability%20Scanning/badge.svg)](https://github.com/justmy2satoshis/mcp-federation-pro/actions)
+[![CI/CD Pipeline](https://github.com/justmy2satoshis/mcp-federation-pro/actions/workflows/mcp-ci.yml/badge.svg)](https://github.com/justmy2satoshis/mcp-federation-pro/actions)
+[![Security Scan](https://github.com/justmy2satoshis/mcp-federation-pro/actions/workflows/security-scan.yml/badge.svg)](https://github.com/justmy2satoshis/mcp-federation-pro/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue)](https://www.python.org/)
-[![Node 18+](https://img.shields.io/badge/node-18%2B-green)](https://nodejs.org/)
-[![Version](https://img.shields.io/badge/version-2.0.0-orange)](https://github.com/justmy2satoshis/mcp-federation-pro/releases)
+[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
+[![Node 18+](https://img.shields.io/badge/node-18+-green.svg)](https://nodejs.org/)
 
-**Professional MCP installer with safe installation, manifest tracking, and clean uninstall.**
+## Professional MCP Installer Suite for Claude Desktop
 
-## 🎯 What's New in v2.0.0
+A production-ready, thoroughly tested installer that safely configures 15 essential MCP servers for Claude Desktop without disrupting existing configurations.
 
-- ✅ **Safe Installation**: Preserves existing user MCPs
-- ✅ **Manifest Tracking**: Tracks what we install vs what existed  
-- ✅ **Clean Uninstall**: Only removes MCPs we installed
-- ✅ **Exact Production Config**: Mirrors working setup exactly
-- ✅ **Backup System**: Creates backups before modifications
-- ✅ **CI/CD Validated**: All changes tested automatically
+### ✅ Key Features
 
-## 🏗️ Architecture
+- **Safe Installation**: Never overwrites existing MCPs
+- **Clean Uninstall**: Only removes what we installed
+- **Cross-Platform**: Works on Windows, macOS, and Linux
+- **Fully Tested**: Comprehensive CI/CD with 30+ automated checks
+- **Manifest Tracking**: Records exactly what was installed
+- **Automatic Backups**: Creates timestamped backups before changes
+- **Zero Test Contamination**: Complete separation of test and production code
 
-This installer follows **safety-first principles**:
-1. Never disrupts existing user MCPs
-2. Tracks everything it installs in a manifest
-3. Creates backups before any modifications
-4. Only uninstalls what it installed
-5. Validates all configurations before saving
+### 📦 Included MCPs (15 Total)
 
-## 📦 All 15 MCP Servers
+| Category | MCPs | Description |
+|----------|------|-------------|
+| **Core Tools** | `filesystem`, `memory`, `sequential-thinking` | Essential file and memory operations |
+| **Development** | `github-manager`, `git-ops`, `desktop-commander` | GitHub integration and Git operations |
+| **Data & Testing** | `sqlite`, `playwright` | Database operations and browser automation |
+| **Search & AI** | `web-search`, `perplexity` | Web search and AI assistance |
+| **Enhanced** | `expert-role-prompt`, `converse-enhanced` | Advanced AI capabilities |
+| **Specialized** | `kimi-k2-code-context`, `kimi-k2-resilient`, `rag-context` | Context-aware code assistance |
 
-| Type | MCP | Description |
-|------|-----|-------------|
-| **NPX** | filesystem | File system access |
-| **NPX** | memory | Memory storage (fixed EEXIST issue) |
-| **NPX** | sequential-thinking | Chain of thought reasoning |
-| **NPX** | github-manager | GitHub operations |
-| **NPX** | sqlite | SQLite database |
-| **NPX** | playwright | Browser automation |
-| **NPX** | web-search | Brave search integration |
-| **NPX** | git-ops | Git operations |
-| **NPX** | desktop-commander | Desktop control |
-| **NPX** | perplexity | Perplexity AI search |
-| **Node** | expert-role-prompt | Expert role prompts |
-| **Python** | converse-enhanced | Enhanced conversations |
-| **Python** | kimi-k2-code-context | Code context analysis |
-| **Python** | kimi-k2-resilient | Resilient processing |
-| **Python** | rag-context | RAG context management |
-
-## 🚀 Quick Start
+### 🚀 Quick Start
 
 ```bash
 # Clone the repository
 git clone https://github.com/justmy2satoshis/mcp-federation-pro.git
 cd mcp-federation-pro
 
-# Run the safe installer
+# Run the installer
 python install.py
 
-# Result: All 15 MCPs installed safely
+# To uninstall (removes only our MCPs)
+python uninstall.py
 ```
 
-## 🛡️ Safe Installation Features
+### 🛡️ Safety Features
 
-### Installation Process
-1. **Detects existing MCPs** before installing
-2. **Creates backup** of current configuration
-3. **Merges new MCPs** without overwriting existing ones
-4. **Saves manifest** tracking what was installed
-5. **Validates** all MCPs are configured correctly
+1. **Pre-Installation Detection**: Identifies existing MCPs before installation
+2. **Manifest Tracking**: Records what we install vs what existed
+3. **Automatic Backups**: Creates timestamped backups before any modifications
+4. **Smart Merging**: Adds new MCPs without disturbing existing ones
+5. **Clean Uninstall**: Only removes MCPs from our manifest
 
-### Installation Manifest
-The installer creates `~/.mcp-federation/installation_manifest.json` containing:
+### 📊 CI/CD Status
+
+This repository features comprehensive GitHub Actions workflows:
+
+#### Test Matrix
+- **Operating Systems**: Ubuntu 22.04, Windows Latest, macOS 14
+- **Node.js Versions**: 18.x, 20.x, 22.x
+- **Python Versions**: 3.9, 3.10, 3.11, 3.12
+
+#### Quality Assurance
+- ✅ **Syntax Validation**: Python AST compilation checks
+- ✅ **Contamination Detection**: Ensures no test code in production
+- ✅ **Cross-Platform Testing**: Windows path handling verified
+- ✅ **Security Scanning**: Automated vulnerability detection
+- ✅ **Clean Separation**: Test wrapper completely isolated from installer
+
+### 📁 Repository Structure
+
+```
+mcp-federation-pro/
+├── install.py              # Production installer (v2.1.0)
+├── uninstall.py            # Clean uninstaller
+├── tests/                  # Test suite (separate from production)
+│   └── test_installer_ci.py    # CI/CD test wrapper
+├── .github/workflows/      # CI/CD pipelines
+│   ├── mcp-ci.yml         # Main CI pipeline
+│   ├── pr-validation.yml  # PR checks
+│   └── security-scan.yml  # Security scanning
+├── LICENSE                # MIT License
+└── README.md              # This file
+```
+
+### 🔧 Technical Details
+
+#### Installation Locations
+
+**Installation Manifest**: `~/.mcp-federation/installation_manifest.json`
+
+**Configuration Paths**:
+- **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+- **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- **Linux**: `~/.claude/claude_desktop_config.json`
+
+#### Manifest Structure
+
 ```json
 {
-  "version": "2.0.0",
-  "installation_date": "2025-09-25T15:30:00",
-  "installed_by_us": ["memory", "sqlite", ...],
-  "already_existed": ["filesystem", ...],
-  "system": "Windows"
+  "version": "2.1.0",
+  "installation_date": "2024-01-26T10:30:00",
+  "installed_by_us": ["filesystem", "memory", ...],
+  "already_existed": ["custom-mcp-1", ...],
+  "system": "Windows",
+  "claude_desktop_mcps": [...]
 }
 ```
 
-## 🧹 Clean Uninstall
+### 🔬 Development Philosophy
 
-Remove ONLY the MCPs we installed, preserving all others:
+This project follows strict CI/CD-first development principles:
 
-```bash
-# Safe uninstall (uses manifest)
-python uninstall.py
+1. **Test Infrastructure First**: CI/CD was built before the installer
+2. **Clean Separation**: Test code never touches production code
+3. **No Contamination**: Production installer has zero test flags or modes
+4. **Comprehensive Testing**: Every commit triggers 30+ automated checks
+5. **Cross-Platform Validation**: Explicit Windows, macOS, and Linux testing
 
-# Force uninstall (removes all 15 standard MCPs)
-python uninstall.py --force
-```
+### 🤝 Contributing
 
-### Uninstall Safety
-- ✅ Reads installation manifest
-- ✅ Only removes MCPs in "installed_by_us" list
-- ✅ Preserves all other user MCPs
-- ✅ Creates backup before removal
-- ✅ Cleans up manifest after uninstall
+We welcome contributions! Please ensure:
+- All tests pass (run `python tests/test_installer_ci.py`)
+- No test code in production files
+- Cross-platform compatibility maintained
+- Documentation updated for new features
 
-## 🔧 Configuration Details
+### 📝 Lessons Learned
 
-### Memory MCP Fix
-Previously had EEXIST errors with npm install. Now uses npx:
-```json
-"memory": {
-  "command": "npx",
-  "args": ["-y", "@modelcontextprotocol/server-memory"],
-  "env": {"NODE_NO_WARNINGS": "1"}
-}
-```
+This is a complete rebuild after learning from our [deprecated repository](https://github.com/justmy2satoshis/mcp-federation-core). Key improvements:
 
-### Expert-Role-Prompt
-Bundled from local installation (not on npm):
-```json
-"expert-role-prompt": {
-  "command": "node",
-  "args": ["~/mcp-servers/expert-role-prompt/server.js"],
-  "env": {"NODE_NO_WARNINGS": "1"}
-}
-```
+- **No Test Contamination**: Previous repo failed due to test code in production
+- **Clean Architecture**: Complete separation of concerns
+- **Professional CI/CD**: Built infrastructure before features
+- **Manifest Tracking**: Clean uninstall capability from day one
 
-## 📊 Installation Summary
+### 🙏 Acknowledgments
 
-After installation, you'll see:
-```
-Installation Summary:
-  • Newly installed: 8 MCPs
-  • Already existed: 7 MCPs  
-  • Total MCPs now: 15
+Built with professional engineering practices, clean code separation, and automated testing to ensure reliability across all platforms.
 
-Newly installed MCPs:
-  • memory
-  • sqlite
-  • playwright
-  • web-search
-  • git-ops
-  • desktop-commander
-  • perplexity
-  • rag-context
-```
+### 📄 License
 
-## 🏭 CI/CD Pipeline
-
-Every commit is tested across:
-- **Operating Systems**: Ubuntu, Windows, macOS
-- **Node.js Versions**: 18.x, 20.x, 22.x
-- **Python Versions**: 3.9, 3.10, 3.11
-- **Total Configurations**: 27 parallel test runs
-
-## 🔒 Security Features
-
-- Daily vulnerability scanning
-- Secret detection
-- License compliance checking
-- Dependency auditing
-- SAST with Semgrep
-
-## 🤝 Contributing
-
-We welcome contributions! The codebase is:
-- ✅ Fully tested with CI/CD
-- ✅ Type-hinted and documented
-- ✅ Following safety-first principles
-- ✅ Clean uninstall capability
-
-### Running Tests Locally
-```bash
-# Install dependencies
-pip install -r requirements.txt
-
-# Run tests
-python -m pytest tests/
-
-# Test installer in dry-run mode
-python install.py --dry-run
-
-# Quick test for CI/CD
-python install.py --quick-test
-```
-
-## 📜 License
-
-MIT License - see [LICENSE](LICENSE) file
-
-## 🙏 Key Improvements Over Legacy
-
-| Feature | Legacy | This Repository |
-|---------|--------|-----------------|
-| Preserves User MCPs | ❌ Overwrites | ✅ Safe merge |
-| Tracks Installations | ❌ No tracking | ✅ Manifest system |
-| Clean Uninstall | ❌ Removes all | ✅ Only ours |
-| Backup System | ❌ None | ✅ Automatic |
-| Memory MCP | ❌ EEXIST error | ✅ Fixed |
-| CI/CD | ❌ None | ✅ 27 configs |
-
-## ⚠️ Migration from Old Repository
-
-If you used the old `mcp-federation-core` repository:
-1. That repo had 10+ conflicting installer versions
-2. This is a clean rebuild with proper practices
-3. Safe to install over existing MCPs
-4. Will preserve your customizations
+MIT License - See [LICENSE](LICENSE) file for details.
 
 ---
 
-**Built with safety-first principles and professional CI/CD**
+**Note**: This repository represents a complete architectural rebuild with professional engineering standards. The deprecated repository served as a valuable learning experience that informed our current best practices.
