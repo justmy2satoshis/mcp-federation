@@ -1,0 +1,224 @@
+name: Security & Vulnerability Scanning
+
+on:
+  schedule:
+    - cron: '0 2 * * *'  # Daily at 2 AM UTC
+  push:
+    branches: [ main ]
+  workflow_dispatch:  # Allow manual trigger
+
+permissions:
+  contents: read
+  security-events: write
+  issues: write
+
+jobs:
+  dependency-audit:
+    name: Dependency Vulnerability Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+      
+      - name: Run npm audit
+        id: npm-audit
+        run: |
+          if [ -f package.json ]; then
+            echo "## NPM Audit Results" > npm-audit-report.md
+            npm audit --json > npm-audit.json || true
+            npm audit --audit-level=high >> npm-audit-report.md 2>&1 || true
+            
+            # Count vulnerabilities
+            CRITICAL=$(jq '.metadata.vulnerabilities.critical // 0' npm-audit.json)
+            HIGH=$(jq '.metadata.vulnerabilities.high // 0' npm-audit.json)
+            
+            echo "npm_critical=$CRITICAL" >> $GITHUB_OUTPUT
+            echo "npm_high=$HIGH" >> $GITHUB_OUTPUT
+            
+            if [ "$CRITICAL" -gt 0 ]; then
+              echo "❌ Found $CRITICAL critical vulnerabilities!" >> npm-audit-report.md
+              exit 1
+            fi
+          else
+            echo "No package.json found - skipping npm audit"
+          fi
+      
+      - name: Run pip-audit
+        id: pip-audit
+        run: |
+          pip install pip-audit
+          echo "## Pip Audit Results" > pip-audit-report.md
+          
+          if [ -f requirements.txt ]; then
+            pip-audit -r requirements.txt --format json > pip-audit.json || true
+            pip-audit -r requirements.txt >> pip-audit-report.md 2>&1 || true
+            
+            # Count vulnerabilities
+            VULN_COUNT=$(jq '. | length' pip-audit.json)
+            echo "pip_vulnerabilities=$VULN_COUNT" >> $GITHUB_OUTPUT
+            
+            if [ "$VULN_COUNT" -gt 0 ]; then
+              echo "⚠️ Found $VULN_COUNT Python vulnerabilities" >> pip-audit-report.md
+            fi
+          else
+            echo "No requirements.txt found - skipping pip-audit"
+          fi
+      
+      - name: License compliance check
+        run: |
+          pip install pip-licenses
+          echo "## License Compliance Report" > license-report.md
+          echo "### Python Dependencies" >> license-report.md
+          pip-licenses --format=markdown --with-urls >> license-report.md || true
+          
+          echo "### NPM Dependencies" >> license-report.md
+          if [ -f package.json ]; then
+            npx license-checker --summary --markdown >> license-report.md || true
+          fi
+          
+          # Check for problematic licenses
+          if grep -i "GPL\|AGPL\|LGPL" license-report.md; then
+            echo "⚠️ WARNING: Found copyleft licenses that may require source disclosure"
+          fi
+      
+      - name: Run Trivy security scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
+      
+      - name: Upload Trivy results to GitHub Security
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-results.sarif'
+      
+      - name: Check for hardcoded secrets
+        run: |
+          pip install detect-secrets
+          echo "## Secret Detection Report" > secrets-report.md
+          
+          # Initialize baseline if it doesn't exist
+          if [ ! -f .secrets.baseline ]; then
+            detect-secrets scan --baseline .secrets.baseline
+          fi
+          
+          # Scan for secrets
+          detect-secrets scan --baseline .secrets.baseline --exclude-files '.*\.md$' > secrets-scan.json
+          
+          # Check for new secrets
+          if detect-secrets audit .secrets.baseline; then
+            echo "✅ No hardcoded secrets detected" >> secrets-report.md
+          else
+            echo "❌ Potential secrets detected!" >> secrets-report.md
+            exit 1
+          fi
+      
+      - name: SAST with Semgrep
+        run: |
+          pip install semgrep
+          echo "## SAST Results" > sast-report.md
+          
+          # Run Semgrep with auto config
+          semgrep --config=auto --json -o semgrep-results.json . || true
+          
+          # Parse results
+          if [ -f semgrep-results.json ]; then
+            ERROR_COUNT=$(jq '.errors | length' semgrep-results.json)
+            RESULT_COUNT=$(jq '.results | length' semgrep-results.json)
+            
+            if [ "$ERROR_COUNT" -gt 0 ]; then
+              echo "❌ Found $ERROR_COUNT errors during scanning" >> sast-report.md
+            fi
+            
+            if [ "$RESULT_COUNT" -gt 0 ]; then
+              echo "⚠️ Found $RESULT_COUNT potential issues" >> sast-report.md
+              jq -r '.results[] | "- [\(.check_id)] \(.path):\(.start.line) - \(.extra.message)"' semgrep-results.json >> sast-report.md
+            else
+              echo "✅ No issues found" >> sast-report.md
+            fi
+          fi
+      
+      - name: Generate security summary
+        if: always()
+        run: |
+          echo "# 🔒 Security Scan Summary" > SECURITY-SUMMARY.md
+          echo "Date: $(date -u +"%Y-%m-%d %H:%M:%S UTC")" >> SECURITY-SUMMARY.md
+          echo "" >> SECURITY-SUMMARY.md
+          
+          echo "## Vulnerability Summary" >> SECURITY-SUMMARY.md
+          echo "| Scanner | Critical | High | Medium | Low |" >> SECURITY-SUMMARY.md
+          echo "|---------|----------|------|--------|-----|" >> SECURITY-SUMMARY.md
+          echo "| NPM Audit | ${{ steps.npm-audit.outputs.npm_critical || 0 }} | ${{ steps.npm-audit.outputs.npm_high || 0 }} | - | - |" >> SECURITY-SUMMARY.md
+          echo "| Pip Audit | - | - | ${{ steps.pip-audit.outputs.pip_vulnerabilities || 0 }} | - |" >> SECURITY-SUMMARY.md
+          
+          echo "" >> SECURITY-SUMMARY.md
+          
+          # Append all reports
+          for report in *-report.md; do
+            if [ -f "$report" ]; then
+              echo "" >> SECURITY-SUMMARY.md
+              cat "$report" >> SECURITY-SUMMARY.md
+            fi
+          done
+      
+      - name: Upload security reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-reports-${{ github.run_number }}
+          path: |
+            SECURITY-SUMMARY.md
+            *-report.md
+            *.sarif
+            *.json
+          retention-days: 90
+      
+      - name: Create security issue if critical vulnerabilities found
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issueTitle = `🚨 Critical Security Vulnerabilities Detected - ${new Date().toISOString().split('T')[0]}`;
+            const issueBody = `
+            ## Critical Security Alert
+            
+            The automated security scan has detected critical vulnerabilities that require immediate attention.
+            
+            ### Scan Details
+            - **Run ID**: ${{ github.run_id }}
+            - **Commit**: ${{ github.sha }}
+            - **Triggered by**: ${{ github.event_name }}
+            
+            ### Action Required
+            1. Review the security reports in the workflow artifacts
+            2. Update vulnerable dependencies
+            3. Re-run the security scan to verify fixes
+            
+            ### Reports
+            - [View Workflow Run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            - [Download Security Reports](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}#artifacts)
+            
+            ---
+            *This issue was automatically created by the security scanning workflow*
+            `;
+            
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: issueTitle,
+              body: issueBody,
+              labels: ['security', 'critical', 'automated']
+            });
