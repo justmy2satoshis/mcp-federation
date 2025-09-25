@@ -1,22 +1,21 @@
 #!/usr/bin/env python3
 """
-MCP Federation Pro Installer v2.0.0
+MCP Federation Pro Installer v2.1.0
+PRODUCTION INSTALLER - NO TEST CODE
 Safe installer that preserves existing MCPs and tracks what it installs
-Mirrors exact working configuration from production environment
 """
 
 import json
 import os
 import platform
 import shutil
-import subprocess
 import sys
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional, Set
+from typing import Dict, Optional
 
-__version__ = "2.0.0"
+__version__ = "2.1.0"
 
 # ANSI color codes
 class Colors:
@@ -29,13 +28,11 @@ class Colors:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
 
-class SafeMCPInstaller:
-    """Safe MCP installer that preserves existing configurations"""
+class MCPInstaller:
+    """Production MCP installer - NO TEST CODE"""
     
-    def __init__(self, dry_run=False, validate=False, quick_test=False):
-        self.dry_run = dry_run
-        self.validate = validate
-        self.quick_test = quick_test
+    def __init__(self):
+        """Initialize installer - NO TEST PARAMETERS"""
         self.start_time = time.time()
         
         # Platform detection
@@ -55,7 +52,6 @@ class SafeMCPInstaller:
         self.existing_mcps = set()
         self.installed_by_us = []
         self.already_existed = []
-        self.repaired_by_us = []
         
         # EXACT working MCP configurations from production
         self.MCP_CONFIGS = {
@@ -147,7 +143,7 @@ class SafeMCPInstaller:
         print(f"{Colors.HEADER}{Colors.BOLD}")
         print("="*60)
         print(f"    MCP FEDERATION PRO INSTALLER v{__version__}")
-        print("    Safe Installation with Manifest Tracking")
+        print("    Production Installer - Safe Installation")
         print("    Preserves Existing MCPs | Clean Uninstall")
         print("="*60)
         print(f"{Colors.ENDC}")
@@ -156,20 +152,17 @@ class SafeMCPInstaller:
     
     def check_prerequisites(self) -> bool:
         """Check system prerequisites"""
-        if self.quick_test:
-            return True
-            
         print(f"{Colors.OKBLUE}Checking prerequisites...{Colors.ENDC}")
         
-        # For CI/CD, be more flexible with version checks
         checks = [
-            ('Python', 'python --version', 'Python'),
-            ('Node.js', 'node --version', 'v'),
-            ('npm', 'npm --version', ''),
-            ('Git', 'git --version', 'git')
+            ('Python', 'python --version'),
+            ('Node.js', 'node --version'),
+            ('npm', 'npm --version'),
+            ('Git', 'git --version')
         ]
         
-        for name, cmd, pattern in checks:
+        all_good = True
+        for name, cmd in checks:
             try:
                 result = subprocess.run(
                     cmd.split(),
@@ -177,14 +170,16 @@ class SafeMCPInstaller:
                     text=True,
                     timeout=5
                 )
-                if result.returncode == 0 and pattern in result.stdout:
+                if result.returncode == 0:
                     print(f"  ✅ {name}: {result.stdout.strip()}")
                 else:
-                    print(f"  ⚠️ {name}: May be missing (non-fatal)")
-            except Exception:
-                print(f"  ⚠️ {name}: Check skipped")
+                    print(f"  ❌ {name}: Not found")
+                    all_good = False
+            except Exception as e:
+                print(f"  ❌ {name}: {e}")
+                all_good = False
         
-        return True
+        return all_good
     
     def read_existing_config(self) -> Optional[Dict]:
         """Read existing Claude Desktop configuration"""
@@ -258,10 +253,6 @@ class SafeMCPInstaller:
     def save_config(self, config: Dict) -> bool:
         """Save configuration to file"""
         try:
-            if self.dry_run:
-                print(f"\n{Colors.OKBLUE}[DRY RUN] Would save config with {len(config['mcpServers'])} MCPs{Colors.ENDC}")
-                return True
-            
             # Ensure directory exists
             self.config_dir.mkdir(parents=True, exist_ok=True)
             
@@ -278,9 +269,6 @@ class SafeMCPInstaller:
     
     def save_manifest(self) -> bool:
         """Save installation manifest for clean uninstall"""
-        if self.dry_run:
-            return True
-            
         try:
             self.manifest_dir.mkdir(parents=True, exist_ok=True)
             
@@ -289,7 +277,6 @@ class SafeMCPInstaller:
                 'installation_date': datetime.now().isoformat(),
                 'installed_by_us': self.installed_by_us,
                 'already_existed': self.already_existed,
-                'repaired_by_us': self.repaired_by_us,
                 'system': self.system,
                 'claude_desktop_mcps': list(self.MCP_CONFIGS.keys())
             }
@@ -331,16 +318,16 @@ class SafeMCPInstaller:
             return False
     
     def run(self) -> int:
-        """Main installation process"""
+        """Main installation process - PRODUCTION ONLY"""
         self.print_banner()
-        
-        # Quick test mode for CI/CD
-        if self.quick_test:
-            print(f"{Colors.OKCYAN}Running in quick test mode for CI/CD{Colors.ENDC}")
-            return 0
         
         # Check prerequisites
         if not self.check_prerequisites():
+            print(f"\n{Colors.FAIL}Prerequisites not met. Please install required tools:{Colors.ENDC}")
+            print("  • Python 3.9+")
+            print("  • Node.js 18+")
+            print("  • npm 8+")
+            print("  • Git")
             return 1
         
         # Read existing configuration
@@ -399,28 +386,10 @@ class SafeMCPInstaller:
         return 0
 
 def main():
-    """Entry point"""
-    import argparse
-    
-    parser = argparse.ArgumentParser(
-        description=f'MCP Federation Pro Installer v{__version__}'
-    )
-    parser.add_argument('--dry-run', action='store_true',
-                        help='Simulate installation without making changes')
-    parser.add_argument('--validate', action='store_true',
-                        help='Validate existing installation')
-    parser.add_argument('--quick-test', action='store_true',
-                        help='Quick test mode for CI/CD')
-    
-    args = parser.parse_args()
-    
-    installer = SafeMCPInstaller(
-        dry_run=args.dry_run,
-        validate=args.validate,
-        quick_test=args.quick_test
-    )
-    
+    """Entry point - PRODUCTION ONLY, NO TEST FLAGS"""
+    # NO ARGPARSE - NO FLAGS - PRODUCTION ONLY
+    installer = MCPInstaller()
     return installer.run()
 
 if __name__ == '__main__':
-    sys.exit(main()
+    sys.exit(main())
