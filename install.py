@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-MCP Federation Installer v3.4.2 - 100% Success Edition
+MCP Federation Installer v3.4.3 - 100% Success Edition
 Using EXACT configurations from working development device
 Fixed stdio_server context manager usage for Python MCPs
-Force regenerates Python MCPs to ensure capabilities field is present
+Removed non-existent server.stopped() call from Python template
 """
 
 import json
@@ -17,7 +17,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, Optional, Tuple, List
 
-__version__ = "3.4.2"
+__version__ = "3.4.3"
 
 # ANSI color codes
 class Colors:
@@ -375,7 +375,7 @@ async def main():
             capabilities={}  # Required field for new API
         )
     ):
-        await server.stopped()
+        pass  # Context manager handles server lifecycle
 
 if __name__ == "__main__":
     asyncio.run(main())
