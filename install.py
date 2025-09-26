@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-MCP Federation Installer v3.2.0 - Correct Classification Edition
-Complete rewrite with proper MCP technology identification
+MCP Federation Installer v3.2.1 - Windows npm.cmd Fix
+Fixes Windows npm execution with proper command resolution
 """
 
 import json
@@ -15,7 +15,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, Optional, Tuple, List
 
-__version__ = "3.2.0"
+__version__ = "3.2.1"
 
 # ANSI color codes
 class Colors:
@@ -84,6 +84,10 @@ class MCPFederationInstaller:
         self.claude_config_path = self._get_claude_config_path()
         self.errors = []
         self.warnings = []
+        # Store command paths for Windows compatibility
+        self.npm_cmd = None
+        self.npx_cmd = None
+        self.node_cmd = None
         
     def _get_claude_config_path(self) -> Path:
         """Get Claude Desktop configuration path"""
@@ -94,21 +98,70 @@ class MCPFederationInstaller:
         else:
             return self.home / ".config" / "claude" / "claude_desktop_config.json"
     
+    def get_npm_cmd(self) -> str:
+        """Get the correct npm command for the platform"""
+        if self.npm_cmd:
+            return self.npm_cmd
+        # On Windows, npm is actually npm.cmd
+        if self.system == "Windows" or os.name == 'nt':
+            # Try to find npm.cmd
+            npm_cmd = shutil.which("npm.cmd")
+            if npm_cmd:
+                return npm_cmd
+            # Fallback to common location
+            nodejs_path = Path("C:/Program Files/nodejs/npm.cmd")
+            if nodejs_path.exists():
+                return str(nodejs_path)
+            return "npm.cmd"  # Last resort
+        return "npm"
+    
+    def get_npx_cmd(self) -> str:
+        """Get the correct npx command for the platform"""
+        if self.npx_cmd:
+            return self.npx_cmd
+        # On Windows, npx is actually npx.cmd
+        if self.system == "Windows" or os.name == 'nt':
+            # Try to find npx.cmd
+            npx_cmd = shutil.which("npx.cmd")
+            if npx_cmd:
+                return npx_cmd
+            # Fallback to common location
+            nodejs_path = Path("C:/Program Files/nodejs/npx.cmd")
+            if nodejs_path.exists():
+                return str(nodejs_path)
+            return "npx.cmd"  # Last resort
+        return "npx"
+    
     def check_prerequisites(self) -> bool:
         """Check for Node.js and npm"""
         print(f"{Colors.OKBLUE}Checking prerequisites...{Colors.ENDC}")
         
         # Check Node.js
-        node_check = shutil.which("node")
+        if self.system == "Windows":
+            node_check = shutil.which("node.exe") or shutil.which("node")
+        else:
+            node_check = shutil.which("node")
+        
         if not node_check:
             print(f"{Colors.FAIL}[X] Node.js not found{Colors.ENDC}")
             return False
+        self.node_cmd = node_check
         
-        # Check npm
-        npm_check = shutil.which("npm")
+        # Check npm - on Windows it's npm.cmd
+        if self.system == "Windows":
+            npm_check = shutil.which("npm.cmd") or shutil.which("npm")
+            npx_check = shutil.which("npx.cmd") or shutil.which("npx")
+        else:
+            npm_check = shutil.which("npm")
+            npx_check = shutil.which("npx")
+        
         if not npm_check:
             print(f"{Colors.FAIL}[X] npm not found{Colors.ENDC}")
             return False
+        
+        # Store the found commands
+        self.npm_cmd = npm_check
+        self.npx_cmd = npx_check or self.get_npx_cmd()
             
         # Check Python
         if sys.version_info < (3, 9):
@@ -128,7 +181,7 @@ class MCPFederationInstaller:
         print(f"  Configuring NPX MCP: {name}")
         
         mcp_config = {
-            "command": "npx",
+            "command": self.get_npx_cmd(),
             "args": ["-y", package]
         }
         
@@ -173,7 +226,7 @@ class MCPFederationInstaller:
         # Install dependencies
         try:
             subprocess.run(
-                ["npm", "install"],
+                [self.get_npm_cmd(), "install"],
                 cwd=str(mcp_dir),
                 check=True,
                 capture_output=True,
@@ -185,7 +238,7 @@ class MCPFederationInstaller:
             return config        
         # Configure MCP
         mcp_config = {
-            "command": "npm",
+            "command": self.get_npm_cmd(),
             "args": ["run", "serve"],
             "cwd": str(mcp_dir)
         }
