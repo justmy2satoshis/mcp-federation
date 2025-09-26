@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-MCP Federation Installer v3.1.0 - Python MCP Fix Edition
-Automated dependency resolution + proper Python MCP configuration
+MCP Federation Installer v3.0.0 - Automated Edition
+One-command installer that automatically resolves dependencies
 """
 
 import json
@@ -11,11 +11,12 @@ import shutil
 import subprocess
 import sys
 import time
+import winreg
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, Optional, Tuple, List
 
-__version__ = "3.1.0"
+__version__ = "3.0.0"
 
 # ANSI color codes
 class Colors:
@@ -66,7 +67,6 @@ class PrerequisiteManager:
 
         # Check registry for Node.js path
         try:
-            import winreg
             with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\Node.js") as key:
                 install_path = winreg.QueryValueEx(key, "InstallPath")[0]
                 if install_path:
@@ -396,7 +396,7 @@ class PrerequisiteManager:
 
 
 class MCPInstaller:
-    """Enhanced MCP installer with Python MCP support"""
+    """Enhanced MCP installer with automatic dependency resolution"""
 
     def __init__(self):
         """Initialize installer"""
@@ -422,26 +422,13 @@ class MCPInstaller:
         self.manifest_path = self.manifest_dir / 'installation_manifest.json'
         self.backup_dir = self.manifest_dir / 'backups'
 
-        # Python MCPs installation directory
-        self.python_mcps_dir = self.home_dir / 'mcp-servers'
-
         # Tracking
         self.existing_mcps = set()
         self.installed_by_us = []
         self.already_existed = []
 
-        # Python MCPs with their GitHub URLs
-        self.PYTHON_MCPS = {
-            'desktop-commander': 'https://github.com/modelcontextprotocol/desktop-commander-mcp',
-            'expert-role-prompt': 'https://github.com/modelcontextprotocol/expert-role-prompt-mcp',
-            'converse-enhanced': 'https://github.com/justmy2satoshis/converse-mcp-enhanced',
-            'kimi-k2-code-context': 'https://github.com/justmy2satoshis/kimi-k2-code-context-mcp',
-            'kimi-k2-resilient': 'https://github.com/justmy2satoshis/kimi-k2-resilient-enhanced',
-            'rag-context': 'https://github.com/justmy2satoshis/rag-context-mcp',
-        }
-
-        # Node.js MCPs (use npx)
-        self.NODEJS_MCP_CONFIGS = {
+        # MCP configurations (same as before)
+        self.MCP_CONFIGS = {
             'filesystem': {
                 'command': 'npx',
                 'args': ['-y', '@modelcontextprotocol/server-filesystem', str(self.home_dir)],
@@ -489,127 +476,49 @@ class MCPInstaller:
                 'command': 'npx',
                 'args': ['-y', '@modelcontextprotocol/server-perplexity'],
                 'env': {'PERPLEXITY_API_KEY': 'YOUR_PERPLEXITY_KEY'}
+            },
+            'desktop-commander': {
+                'command': 'npx',
+                'args': ['-y', '@modelcontextprotocol/server-desktop-commander'],
+                'env': {'NODE_NO_WARNINGS': '1'}
+            },
+            'expert-role-prompt': {
+                'command': 'npx',
+                'args': ['-y', '@modelcontextprotocol/server-expert-role-prompt'],
+                'env': {'NODE_NO_WARNINGS': '1'}
+            },
+            'converse-enhanced': {
+                'command': 'npx',
+                'args': ['-y', 'converse-mcp-enhanced'],
+                'env': {'NODE_NO_WARNINGS': '1'}
+            },
+            'kimi-k2-code-context': {
+                'command': 'npx',
+                'args': ['-y', 'kimi-k2-code-context-mcp'],
+                'env': {'NODE_NO_WARNINGS': '1'}
+            },
+            'kimi-k2-resilient': {
+                'command': 'npx',
+                'args': ['-y', 'kimi-k2-resilient-enhanced'],
+                'env': {'NODE_NO_WARNINGS': '1'}
+            },
+            'rag-context': {
+                'command': 'npx',
+                'args': ['-y', 'rag-context-mcp'],
+                'env': {'NODE_NO_WARNINGS': '1'}
             }
         }
-
-        # Python MCP configurations (will be populated dynamically)
-        self.PYTHON_MCP_CONFIGS = {}
-
-        # Combined MCP configurations
-        self.MCP_CONFIGS = {}
-
-    def install_python_mcp(self, name: str, github_url: str) -> bool:
-        """Clone and install a Python MCP"""
-        print(f"{Colors.OKBLUE}Installing Python MCP: {name}...{Colors.ENDC}")
-
-        mcp_path = self.python_mcps_dir / name
-
-        # Check if already exists
-        if mcp_path.exists():
-            print(f"  ✓ {name} already exists at {mcp_path}")
-        else:
-            # Clone from GitHub
-            try:
-                print(f"  Cloning from {github_url}...")
-                result = subprocess.run(
-                    ["git", "clone", github_url, str(mcp_path)],
-                    capture_output=True,
-                    text=True,
-                    timeout=60
-                )
-                if result.returncode != 0:
-                    print(f"{Colors.FAIL}  Failed to clone {name}: {result.stderr}{Colors.ENDC}")
-                    return False
-                print(f"{Colors.OKGREEN}  ✅ Cloned {name} successfully{Colors.ENDC}")
-            except Exception as e:
-                print(f"{Colors.FAIL}  Error cloning {name}: {e}{Colors.ENDC}")
-                return False
-
-        # Install Python dependencies
-        if not self.install_python_dependencies(mcp_path, name):
-            return False
-
-        # Create configuration for this Python MCP
-        self.PYTHON_MCP_CONFIGS[name] = {
-            'command': 'python',
-            'args': ['server.py'],
-            'cwd': str(mcp_path),
-            'env': {'PYTHONUNBUFFERED': '1'}
-        }
-
-        # Some MCPs might need special environment variables
-        if name == 'converse-enhanced':
-            self.PYTHON_MCP_CONFIGS[name]['env']['OPENAI_API_KEY'] = 'YOUR_OPENAI_KEY'
-
-        return True
-
-    def install_python_dependencies(self, mcp_path: Path, name: str) -> bool:
-        """Install Python dependencies for an MCP"""
-        print(f"  Installing Python dependencies for {name}...")
-
-        # Check for requirements.txt
-        requirements_file = mcp_path / "requirements.txt"
-
-        # Common Python MCP packages to install
-        common_packages = ["mcp", "anthropic-mcp"]
-
-        try:
-            # Install common MCP packages first
-            for package in common_packages:
-                print(f"    Installing {package}...")
-                result = subprocess.run(
-                    [sys.executable, "-m", "pip", "install", package, "--quiet", "--user"],
-                    capture_output=True,
-                    text=True,
-                    timeout=60
-                )
-                if result.returncode != 0 and "Requirement already satisfied" not in result.stdout:
-                    print(f"{Colors.WARNING}    Warning: Could not install {package}{Colors.ENDC}")
-
-            # Install from requirements.txt if it exists
-            if requirements_file.exists():
-                print(f"    Installing from requirements.txt...")
-                result = subprocess.run(
-                    [sys.executable, "-m", "pip", "install", "-r", str(requirements_file), "--quiet", "--user"],
-                    capture_output=True,
-                    text=True,
-                    timeout=120
-                )
-                if result.returncode != 0:
-                    print(f"{Colors.WARNING}    Warning: Some dependencies might have failed{Colors.ENDC}")
-                else:
-                    print(f"{Colors.OKGREEN}    ✅ Dependencies installed{Colors.ENDC}")
-            else:
-                print(f"    No requirements.txt found, using common packages only")
-
-            # Verify MCP module is available
-            result = subprocess.run(
-                [sys.executable, "-c", "import mcp"],
-                capture_output=True,
-                text=True,
-                timeout=5
-            )
-            if result.returncode == 0:
-                print(f"{Colors.OKGREEN}    ✅ Python MCP module verified{Colors.ENDC}")
-                return True
-            else:
-                print(f"{Colors.WARNING}    Warning: MCP module not verified{Colors.ENDC}")
-                return True  # Continue anyway, might work
-
-        except Exception as e:
-            print(f"{Colors.FAIL}    Error installing dependencies: {e}{Colors.ENDC}")
-            return False
 
     def print_banner(self):
         """Display installation banner"""
         print(f"\n{Colors.HEADER}{Colors.BOLD}")
         print("="*60)
-        print("    MCP FEDERATION INSTALLER v3.1.0")
-        print("    Python MCP Configuration Fix")
+        print("    MCP FEDERATION INSTALLER v3.0.0")
+        print("    Automated Dependency Resolution Edition")
         print("="*60)
         print(f"{Colors.ENDC}")
         print(f"{Colors.OKCYAN}Installing 15 essential MCP servers for Claude Desktop{Colors.ENDC}")
-        print(f"{Colors.OKBLUE}Now with proper Python MCP support!{Colors.ENDC}\n")
+        print(f"{Colors.OKBLUE}This installer will automatically handle dependencies!{Colors.ENDC}\n")
 
     def backup_config(self) -> bool:
         """Create timestamped backup of existing configuration"""
@@ -651,28 +560,6 @@ class MCPInstaller:
             print(f"{Colors.FAIL}Error reading config: {e}{Colors.ENDC}")
             return None
 
-    def prepare_mcp_configs(self) -> bool:
-        """Prepare all MCP configurations (Node.js + Python)"""
-        print(f"\n{Colors.OKBLUE}Preparing MCP configurations...{Colors.ENDC}")
-
-        # Create Python MCPs directory if needed
-        self.python_mcps_dir.mkdir(parents=True, exist_ok=True)
-
-        # Install Python MCPs
-        print(f"\n{Colors.OKCYAN}Installing Python MCPs...{Colors.ENDC}")
-        for name, github_url in self.PYTHON_MCPS.items():
-            if not self.install_python_mcp(name, github_url):
-                print(f"{Colors.WARNING}Warning: Failed to install {name}{Colors.ENDC}")
-
-        # Combine Node.js and Python configurations
-        self.MCP_CONFIGS = {**self.NODEJS_MCP_CONFIGS, **self.PYTHON_MCP_CONFIGS}
-
-        print(f"\n{Colors.OKGREEN}✅ Prepared {len(self.MCP_CONFIGS)} MCP configurations{Colors.ENDC}")
-        print(f"  • Node.js MCPs: {len(self.NODEJS_MCP_CONFIGS)}")
-        print(f"  • Python MCPs: {len(self.PYTHON_MCP_CONFIGS)}")
-
-        return True
-
     def merge_configs(self, existing_config: Optional[Dict]) -> Dict:
         """Merge new MCPs with existing configuration"""
         if existing_config is None:
@@ -689,14 +576,7 @@ class MCPInstaller:
                 self.installed_by_us.append(name)
                 print(f"  + Adding {name}")
             else:
-                # Update Python MCP configs even if they exist (to fix configuration)
-                if name in self.PYTHON_MCPS:
-                    print(f"  ⚠ Updating {name} configuration (Python MCP fix)")
-                    config['mcpServers'][name] = mcp_config
-                    if name not in self.installed_by_us:
-                        self.installed_by_us.append(name)
-                else:
-                    print(f"  ✓ {name} already exists - skipping")
+                print(f"  ✓ {name} already exists - skipping")
 
         return config
 
@@ -728,9 +608,7 @@ class MCPInstaller:
                 'installed_by_us': self.installed_by_us,
                 'already_existed': self.already_existed,
                 'system': self.system,
-                'claude_desktop_mcps': list(self.MCP_CONFIGS.keys()),
-                'python_mcps': list(self.PYTHON_MCPS.keys()),
-                'python_mcps_dir': str(self.python_mcps_dir)
+                'claude_desktop_mcps': list(self.MCP_CONFIGS.keys())
             }
 
             with open(self.manifest_path, 'w') as f:
@@ -744,49 +622,28 @@ class MCPInstaller:
             return False
 
     def validate_installation(self, config: Dict) -> bool:
-        """Validate that all MCPs are configured correctly"""
+        """Validate that all MCPs are configured"""
         if 'mcpServers' not in config:
             return False
 
         mcp_count = len(config['mcpServers'])
         required_count = len(self.MCP_CONFIGS)
 
-        print(f"\n{Colors.OKBLUE}Validating MCP configurations...{Colors.ENDC}")
-
-        # Check Python MCPs specifically
-        python_mcps_ok = True
-        for name in self.PYTHON_MCPS.keys():
-            if name in config['mcpServers']:
-                mcp_config = config['mcpServers'][name]
-                if mcp_config.get('command') == 'python' and 'cwd' in mcp_config:
-                    print(f"  ✅ {name}: Correctly configured (Python MCP)")
-                else:
-                    print(f"  ❌ {name}: Configuration issue")
-                    python_mcps_ok = False
-            else:
-                print(f"  ❌ {name}: Missing from configuration")
-                python_mcps_ok = False
-
-        if mcp_count >= required_count and python_mcps_ok:
+        if mcp_count >= required_count:
             print(f"{Colors.OKGREEN}✅ All {required_count} MCPs configured successfully{Colors.ENDC}")
             return True
         else:
-            print(f"{Colors.WARNING}Some MCPs may need attention{Colors.ENDC}")
-            return True  # Non-fatal
+            print(f"{Colors.WARNING}Expected {required_count} MCPs, found {mcp_count}{Colors.ENDC}")
+            return False
 
     def run(self) -> int:
-        """Main installation process with Python MCP fixes"""
+        """Main installation process with automatic dependency resolution"""
         self.print_banner()
 
         # Check and auto-install prerequisites
         if not self.prereq_manager.check_all_prerequisites():
             print(f"\n{Colors.FAIL}Could not satisfy prerequisites automatically.{Colors.ENDC}")
             print(f"{Colors.WARNING}Please install missing dependencies manually and try again.{Colors.ENDC}")
-            return 1
-
-        # Prepare MCP configurations (install Python MCPs)
-        if not self.prepare_mcp_configs():
-            print(f"{Colors.FAIL}Failed to prepare MCP configurations{Colors.ENDC}")
             return 1
 
         # Read existing configuration
@@ -801,7 +658,7 @@ class MCPInstaller:
                 return 1
 
         # Merge configurations
-        print(f"\n{Colors.OKBLUE}Configuring MCP servers...{Colors.ENDC}")
+        print(f"\n{Colors.OKBLUE}Installing MCP servers...{Colors.ENDC}")
         merged_config = self.merge_configs(existing_config)
 
         # Save configuration
@@ -810,6 +667,7 @@ class MCPInstaller:
             return 1
 
         # Validate
+        print(f"\n{Colors.OKBLUE}Validating installation...{Colors.ENDC}")
         self.validate_installation(merged_config)
 
         # Save manifest
@@ -828,23 +686,18 @@ class MCPInstaller:
         print(f"  • Newly installed: {len(self.installed_by_us)} MCPs")
         print(f"  • Already existed: {len(self.already_existed)} MCPs")
         print(f"  • Total MCPs: {len(merged_config.get('mcpServers', {}))}")
-        print(f"  • Python MCPs fixed: {len(self.PYTHON_MCPS)}")
 
         if self.installed_by_us:
-            print(f"\n{Colors.OKCYAN}Newly installed/updated MCPs:{Colors.ENDC}")
+            print(f"\n{Colors.OKCYAN}Newly installed MCPs:{Colors.ENDC}")
             for mcp in self.installed_by_us:
-                mcp_type = "Python" if mcp in self.PYTHON_MCPS else "Node.js"
-                print(f"    • {mcp} ({mcp_type})")
+                print(f"    • {mcp}")
 
         print(f"\n{Colors.OKCYAN}Next steps:{Colors.ENDC}")
-        print("  1. Restart Claude Desktop completely")
-        print("  2. All Python MCPs should now connect properly")
-        print("  3. Configure API keys as needed:")
+        print("  1. Restart Claude Desktop")
+        print("  2. Configure API keys as needed:")
         print("     • GitHub token for github-manager")
         print("     • Brave API key for web-search")
         print("     • Perplexity key for perplexity")
-        print("     • OpenAI key for converse-enhanced")
-        print(f"\n{Colors.OKGREEN}Python MCPs are now properly configured with 'python server.py' and correct paths!{Colors.ENDC}")
         print(f"\n{Colors.OKBLUE}To uninstall: python uninstall.py{Colors.ENDC}\n")
 
         return 0
@@ -854,7 +707,7 @@ def main():
     """Entry point with enhanced features"""
     # Add command line arguments for automation
     import argparse
-    parser = argparse.ArgumentParser(description='MCP Federation Installer v3.1.0 - Python Fix Edition')
+    parser = argparse.ArgumentParser(description='MCP Federation Installer - Auto Edition')
     parser.add_argument('--auto', action='store_true', help='Automatically install dependencies without prompting')
     parser.add_argument('--fix-npm', action='store_true', help='Fix npm PATH issues on Windows')
     args = parser.parse_args()
@@ -868,4 +721,4 @@ def main():
 
 
 if __name__ == '__main__':
-    sys.exit(main()
+    sys.exit(main())
