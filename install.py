@@ -326,25 +326,54 @@ main().catch((error) => {
 """MCP Server for %s"""
 import asyncio
 import json
-from mcp.server import Server, StdioTransport
+from mcp.server import Server
 from mcp.server.models import InitializationOptions
+from mcp.server.stdio import stdio_server
+import mcp.types as types
+
+server = Server("%s")
+
+@server.list_tools()
+async def list_tools():
+    """List available tools"""
+    return [
+        types.Tool(
+            name="example_tool",
+            description="Example tool for %s",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "input": {"type": "string", "description": "Input parameter"}
+                },
+                "required": ["input"]
+            }
+        )
+    ]
+
+@server.call_tool()
+async def call_tool(name: str, arguments: dict) -> list:
+    """Handle tool calls"""
+    if name == "example_tool":
+        return [types.TextContent(
+            type="text",
+            text=f"Processed: {arguments.get('input', 'no input')}"
+        )]
+    raise ValueError(f"Unknown tool: {name}")
 
 async def main():
-    server = Server("%s")
-    
-    @server.list_tools()
-    async def list_tools():
-        return []
-    
-    transport = StdioTransport()
-    await server.run(
-        transport,
-        InitializationOptions(server_name="%s", server_version="1.0.0")
+    """Main entry point - uses stdio_server instead of StdioTransport"""
+    await stdio_server(
+        server,
+        InitializationOptions(
+            server_name="%s",
+            server_version="1.0.0",
+            capabilities={}  # Required field for new API
+        )
     )
 
 if __name__ == "__main__":
     asyncio.run(main())
-''' % (name, name, name)
+''' % (name, name, name, name)
                 
                 with open(server_py, 'w') as f:
                     f.write(template)
