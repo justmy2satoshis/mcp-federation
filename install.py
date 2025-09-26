@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
-MCP Federation Installer v3.3.0 - 100% Success Edition
+MCP Federation Installer v3.4.1 - 100% Success Edition
 Using EXACT configurations from working development device
+Fixed stdio_server context manager usage for Python MCPs
 """
 
 import json
@@ -15,7 +16,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, Optional, Tuple, List
 
-__version__ = "3.3.0"
+__version__ = "3.4.1"
 
 # ANSI color codes
 class Colors:
@@ -361,15 +362,16 @@ async def call_tool(name: str, arguments: dict) -> list:
     raise ValueError(f"Unknown tool: {name}")
 
 async def main():
-    """Main entry point - uses stdio_server instead of StdioTransport"""
-    await stdio_server(
+    """Main entry point - uses stdio_server as async context manager"""
+    async with stdio_server(
         server,
         InitializationOptions(
             server_name="%s",
             server_version="1.0.0",
             capabilities={}  # Required field for new API
         )
-    )
+    ):
+        await server.stopped()
 
 if __name__ == "__main__":
     asyncio.run(main())
