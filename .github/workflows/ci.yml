@@ -3,16 +3,58 @@ name: MCP Federation CI/CD Pipeline
 on:
   push:
     branches: [ main ]
+  pull_request:
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
-  test:
-    name: Windows Tests
-    runs-on: windows-latest
-    
+  validate:
+    name: Syntax and Quality Validation
+    runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      
-      - name: Test
-        run: echo 'CI/CD Test Complete'
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Python Syntax Check
+        run: |
+          echo "Checking Python syntax..."
+          python -m py_compile install.py uninstall.py || exit 1
+          echo "✅ All Python files have valid syntax"
+
+      - name: Test Installer Help
+        run: |
+          echo "Testing installer --help command..."
+          python install.py --help || exit 1
+          echo "✅ Installer help works"
+
+  test:
+    name: Cross-Platform Tests
+    needs: validate
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+        python-version: ['3.9', '3.11']
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Test Installer Syntax
+        run: |
+          python -m py_compile install.py
+          python install.py --help
+
+      - name: Platform Test
+        run: echo "Platform test on ${{ matrix.os }} with Python ${{ matrix.python-version }}"
