@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """
-MCP Federation Installer v3.4.1 - 100% Success Edition
+MCP Federation Installer v3.4.2 - 100% Success Edition
 Using EXACT configurations from working development device
 Fixed stdio_server context manager usage for Python MCPs
+Force regenerates Python MCPs to ensure capabilities field is present
 """
 
 import json
@@ -16,7 +17,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, Optional, Tuple, List
 
-__version__ = "3.4.1"
+__version__ = "3.4.2"
 
 # ANSI color codes
 class Colors:
@@ -322,7 +323,10 @@ main().catch((error) => {
             server_py = mcp_dir / mcp_info["main"]
             server_py.parent.mkdir(parents=True, exist_ok=True)
             
-            if not server_py.exists():
+            # Always regenerate for the 3 MCPs that need capabilities fix
+            force_regenerate = name in ["kimi-k2-code-context-enhanced", "kimi-k2-resilient-enhanced", "rag-context-fixed"]
+            
+            if not server_py.exists() or force_regenerate:
                 template = '''#!/usr/bin/env python3
 """MCP Server for %s"""
 import asyncio
