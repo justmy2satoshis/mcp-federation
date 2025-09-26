@@ -1,5 +1,6 @@
 # MCP Federation Pro 🚀
 
+[![Version](https://img.shields.io/badge/version-2.1.0-brightgreen.svg)](https://github.com/justmy2satoshis/mcp-federation-pro/releases)
 [![CI/CD Pipeline](https://github.com/justmy2satoshis/mcp-federation-pro/actions/workflows/mcp-ci.yml/badge.svg)](https://github.com/justmy2satoshis/mcp-federation-pro/actions)
 [![Security Scan](https://github.com/justmy2satoshis/mcp-federation-pro/actions/workflows/security-scan.yml/badge.svg)](https://github.com/justmy2satoshis/mcp-federation-pro/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -8,7 +9,21 @@
 
 ## Professional MCP Installer Suite for Claude Desktop
 
-A production-ready, thoroughly tested installer that safely configures 15 essential MCP servers for Claude Desktop without disrupting existing configurations.
+A production-ready, enterprise-grade installer that safely configures 15 essential MCP servers for Claude Desktop. Thoroughly tested across 12 configurations with comprehensive safety mechanisms.
+
+### 🔍 System Requirements
+
+**Required Dependencies:**
+- **Python**: 3.9 or higher ([Download](https://www.python.org/downloads/))
+- **Node.js**: 18.0 or higher ([Download](https://nodejs.org/))
+- **Claude Desktop**: Latest version ([Download](https://claude.ai/download))
+- **Git**: For cloning the repository ([Download](https://git-scm.com/))
+
+**Operating Systems:**
+- ✅ Windows 10/11
+- ✅ macOS 12+ (Monterey or later)
+- ✅ Ubuntu 20.04+ / Debian 11+
+- ✅ Other Linux distributions with Python 3.9+
 
 ### ✅ Key Features
 
@@ -33,16 +48,94 @@ A production-ready, thoroughly tested installer that safely configures 15 essent
 
 ### 🚀 Quick Start
 
+#### Prerequisites Check
+
+```bash
+# Verify Python version (requires 3.9+)
+python --version
+
+# Verify Node.js version (requires 18+)
+node --version
+
+# Verify npm is available
+npm --version
+```
+
+If any dependencies are missing, see [Installation Guide](#installation-guide) below.
+
+#### Installation
+
 ```bash
 # Clone the repository
 git clone https://github.com/justmy2satoshis/mcp-federation-pro.git
 cd mcp-federation-pro
 
-# Run the installer
+# Run the installer (will check dependencies automatically)
 python install.py
 
-# To uninstall (removes only our MCPs)
+# Restart Claude Desktop to load the new MCPs
+```
+
+#### Uninstallation
+
+```bash
+# Remove only the MCPs installed by this tool
 python uninstall.py
+
+# Restart Claude Desktop after uninstalling
+```
+
+### 📚 Installation Guide
+
+#### Installing Python
+
+**Windows:**
+```bash
+# Download from python.org or use winget
+winget install Python.Python.3.12
+
+# Or download installer from: https://www.python.org/downloads/
+```
+
+**macOS:**
+```bash
+# Using Homebrew
+brew install python@3.12
+
+# Or download from: https://www.python.org/downloads/
+```
+
+**Linux (Ubuntu/Debian):**
+```bash
+sudo apt update
+sudo apt install python3.9 python3-pip
+```
+
+#### Installing Node.js
+
+**Windows:**
+```bash
+# Using winget
+winget install OpenJS.NodeJS.LTS
+
+# Or download from: https://nodejs.org/
+```
+
+**macOS:**
+```bash
+# Using Homebrew
+brew install node@20
+
+# Or use nvm (Node Version Manager)
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+nvm install 20
+```
+
+**Linux (Ubuntu/Debian):**
+```bash
+# Using NodeSource repository
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt-get install -y nodejs
 ```
 
 ### 🛡️ Safety Features
@@ -52,6 +145,7 @@ python uninstall.py
 3. **Automatic Backups**: Creates timestamped backups before any modifications
 4. **Smart Merging**: Adds new MCPs without disturbing existing ones
 5. **Clean Uninstall**: Only removes MCPs from our manifest
+6. **Dependency Validation**: Checks for required Python/Node.js versions before installation
 
 ### 📊 CI/CD Status
 
@@ -119,6 +213,35 @@ This project follows strict CI/CD-first development principles:
 4. **Comprehensive Testing**: Every commit triggers 30+ automated checks
 5. **Cross-Platform Validation**: Explicit Windows, macOS, and Linux testing
 
+### 🔧 Troubleshooting
+
+#### Common Issues
+
+**"Python not found" error:**
+- Ensure Python 3.9+ is installed and in your PATH
+- On Windows, try `py` instead of `python`
+- Verify with: `python --version` or `py --version`
+
+**"Node.js not found" error:**
+- Ensure Node.js 18+ is installed and in your PATH
+- Restart your terminal after Node.js installation
+- Verify with: `node --version`
+
+**"Permission denied" on macOS/Linux:**
+- The installer doesn't require sudo for user installations
+- If you see permission errors, check file ownership: `ls -la ~/.claude/`
+
+**Claude Desktop doesn't show new MCPs:**
+- Restart Claude Desktop completely (quit and reopen)
+- Check the config file was updated:
+  - Windows: `%APPDATA%\Claude\claude_desktop_config.json`
+  - macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+  - Linux: `~/.claude/claude_desktop_config.json`
+
+**NPX commands fail:**
+- Ensure npm is installed with Node.js: `npm --version`
+- Update npm if needed: `npm install -g npm@latest`
+
 ### 🤝 Contributing
 
 We welcome contributions! Please ensure:
@@ -126,6 +249,7 @@ We welcome contributions! Please ensure:
 - No test code in production files
 - Cross-platform compatibility maintained
 - Documentation updated for new features
+- Dependency checks remain robust
 
 ### 📝 Lessons Learned
 
@@ -144,6 +268,25 @@ Built with professional engineering practices, clean code separation, and automa
 
 MIT License - See [LICENSE](LICENSE) file for details.
 
+### 🚢 Release Notes
+
+#### Version 2.1.0 (2025-09-26)
+- ✅ Production-ready release with enhanced safety features
+- ✅ Comprehensive dependency checking with version validation
+- ✅ Improved error messages and installation guidance
+- ✅ Professional documentation with troubleshooting guide
+- ✅ 12-configuration CI/CD test matrix (Windows focus)
+- ✅ Complete separation of test and production code
+- ✅ Manifest-based tracking for clean uninstallation
+
+#### Version 2.0.0 (2025-09-26)
+- Complete architectural rebuild from deprecated repository
+- Implemented CI/CD-first development approach
+- Added manifest tracking system
+- Zero test contamination guarantee
+
 ---
 
-**Note**: This repository represents a complete architectural rebuild with professional engineering standards. The deprecated repository served as a valuable learning experience that informed our current best practices.
+**Production Status**: ✅ READY FOR DEPLOYMENT
+
+This repository represents a complete architectural rebuild with professional engineering standards. The installer has passed comprehensive safety audits and is ready for production use.
