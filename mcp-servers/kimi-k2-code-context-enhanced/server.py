@@ -38,7 +38,7 @@ except ImportError:
 try:
     from mcp.server import Server
     from mcp.server.models import InitializationOptions
-    import mcp.server.stdio
+    from mcp.server.stdio import stdio_server
     import mcp.types as types
 except ImportError:
     print("ERROR: MCP not installed. Run: pip install mcp")
@@ -638,7 +638,7 @@ async def main():
     
     try:
         # Run with stdio transport
-        async with mcp.server.stdio.stdio_server() as (read_stream, write_stream):
+        async with stdio_server() as (read_stream, write_stream):
             print("[Kimi K2 Code Context Enhanced] Server initialized, running...", file=sys.stderr, flush=True)
             await app.run(
                 read_stream,

@@ -30,7 +30,6 @@ import mcp.types as types
 from mcp.server import Server
 from mcp.server.stdio import stdio_server
 from mcp.server.models import InitializationOptions
-import mcp.server.stdio
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -798,7 +797,7 @@ async def main():
         database.init_database()
         
         # Run with stdio transport
-        async with mcp.server.stdio.stdio_server() as (read_stream, write_stream):
+        async with stdio_server() as (read_stream, write_stream):
             print("[Kimi K2 Resilient Enhanced] Server initialized, running...", file=sys.stderr, flush=True)
             await app.run(
                 read_stream,

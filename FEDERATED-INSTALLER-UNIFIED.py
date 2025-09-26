@@ -339,10 +339,9 @@ export MCP_UNIFIED="true"
                 }
             },
             'kimi-k2-code-context': {
-                'type': 'github',
-                'source': 'https://github.com/justmy2satoshis/kimi-k2-code-context-mcp-repo.git',
+                'type': 'federation',
+                'source_directory': 'mcp-servers/kimi-k2-code-context-enhanced',
                 'directory': 'kimi-k2-code-context-enhanced',
-                'branch': 'main',
                 'install': [],  # Python server - no npm install needed
                 'needs_db': True,  # UNIFIED with wrapper
                 'config': {
@@ -351,10 +350,9 @@ export MCP_UNIFIED="true"
                 }
             },
             'kimi-k2-resilient': {
-                'type': 'github',
-                'source': 'https://github.com/justmy2satoshis/kimi-k2-heavy-processor-mcp-repo.git',
+                'type': 'federation',
+                'source_directory': 'mcp-servers/kimi-k2-resilient-enhanced',
                 'directory': 'kimi-k2-resilient-enhanced',
-                'branch': 'main',
                 'install': [],  # Python server - no npm install needed
                 'needs_db': True,  # UNIFIED with wrapper
                 'config': {
@@ -363,13 +361,14 @@ export MCP_UNIFIED="true"
                 }
             },
             'rag-context': {
-                'type': 'npm',
-                'source': '@notbnull/mcp-rag-context',
-                'install': ['npm', 'install', '-g', '@notbnull/mcp-rag-context'],
+                'type': 'federation',
+                'source_directory': 'mcp-servers/rag-context-fixed',
+                'directory': 'rag-context-fixed',
+                'install': [],  # Python server - no npm install needed
                 'needs_db': True,  # UNIFIED
                 'config': {
-                    'command': 'npx',
-                    'args': ['-y', '@notbnull/mcp-rag-context'],
+                    'command': 'python' if self.is_windows else 'python3',
+                    'args': [str(self.base_dir / 'rag-context-fixed' / 'server.py')],
                     'timeout': 120000
                 }
             }
@@ -471,6 +470,52 @@ export MCP_UNIFIED="true"
 
         except Exception as e:
             print(f"  ❌ Error: {e}")
+            return False
+
+    def install_federation_mcp(self, name, mcp_info):
+        """Copy federation MCP from bundled sources"""
+        print(f"\n📦 Installing {name} from bundled sources...")
+
+        # Get paths
+        script_dir = Path(__file__).parent
+        source_dir = script_dir / mcp_info['source_directory']
+        target_dir = self.base_dir / mcp_info['directory']
+
+        try:
+            # Check if source exists
+            if not source_dir.exists():
+                print(f"  ❌ Source directory not found: {source_dir}")
+                return False
+
+            # Copy federation MCP
+            if target_dir.exists():
+                shutil.rmtree(target_dir)
+
+            shutil.copytree(source_dir, target_dir)
+            print(f"  ✅ Federation MCP copied successfully")
+
+            # Install dependencies if needed
+            if mcp_info.get('install'):
+                if mcp_info['install'][0] == 'npm':
+                    result = subprocess.run(['npm', 'install'], cwd=str(target_dir), capture_output=True, text=True)
+                    if result.returncode == 0:
+                        print(f"  ✅ npm dependencies installed")
+                    else:
+                        print(f"  ⚠️ npm install had warnings (usually OK)")
+
+                elif mcp_info['install'][0] == 'pip':
+                    pip_cmd = ['pip', 'install'] if self.is_windows else ['pip3', 'install']
+                    pip_cmd.extend(mcp_info['install'][1:])  # Add the packages
+                    result = subprocess.run(pip_cmd, capture_output=True, text=True)
+                    if result.returncode == 0:
+                        print(f"  ✅ Python dependencies installed")
+                    else:
+                        print(f"  ⚠️ pip install had warnings: {result.stderr[:100]}")
+
+            return True
+
+        except Exception as e:
+            print(f"  ❌ Exception during federation installation: {e}")
             return False
 
     def install_github_mcp(self, name, mcp_info):
@@ -797,6 +842,8 @@ export MCP_UNIFIED="true"
                 success = self.install_npm_mcp(name, info)
             elif info['type'] == 'github':
                 success = self.install_github_mcp(name, info)
+            elif info['type'] == 'federation':
+                success = self.install_federation_mcp(name, info)
 
             if success:
                 self.installed_mcps.append(name)

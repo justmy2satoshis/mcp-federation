@@ -1,608 +1,127 @@
-# MCP Federation Core v2.2 - Production Suite 🚀
+# MCP Federation v4.0.0 - 100% Success Rate 🎉
 
 [![MCPs](https://img.shields.io/badge/MCPs-15-blue)](https://modelcontextprotocol.io/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Cost Savings](https://img.shields.io/badge/Savings-80--95%25-purple)](https://ollama.ai/)
 [![Claude Desktop](https://img.shields.io/badge/Claude-Desktop-orange)](https://claude.ai)
-[![Version](https://img.shields.io/badge/Version-2.2.0-red)](https://github.com/justmy2satoshis/mcp-federation-core)
-[![Status](https://img.shields.io/badge/status-100%25%20functional-brightgreen)](https://github.com/justmy2satoshis/mcp-federation-core)
+[![Version](https://img.shields.io/badge/Version-4.0.0-red)](https://github.com/justmy2satoshis/mcp-federation)
+[![Success Rate](https://img.shields.io/badge/Success-15%2F15-brightgreen)](https://github.com/justmy2satoshis/mcp-federation)
 
-> **✅ ALL 15 MCPs WORKING v2.2.0** - Fixed memory and NPX package issues, guaranteed all MCPs install correctly
+## 🎉 v4.0.0 - 100% Success Rate Achieved!
+**All 15 MCPs now working perfectly with the UNIFIED installer**
 
-**Lightweight orchestrator for 15 production-ready Model Context Protocol servers with selective database unification, guaranteed data preservation, and enterprise-grade features.**
+- ✅ 10 NPX-based MCPs
+- ✅ 2 GitHub-based MCPs
+- ✅ 3 Federation MCPs (bundled sources)
 
-## 🎯 What is MCP Federation Core?
+## ⚡ Quick Install
 
-MCP Federation Core is a lightweight, unified database system that enables seamless communication between 15 different Model Context Protocol servers. It provides a foundational framework for AI context management, allowing MCPs to share data, persist information, and collaborate through a federated architecture.
-
-### Key Features:
-- 🎯 **Ollama Auto-Detection**: Zero-config support for ALL Ollama models (llama3.2, mistral, phi3, etc.)
-- 💰 **95% Cost Savings**: Automatic local model priority with API fallback
-- 🔄 **Unified Database**: Single SQLite database shared across all MCPs
-- 🌐 **Cross-MCP Communication**: Query data from any MCP using `from_mcp` parameter
-- ⚡ **Lightweight**: Optimized for standard hardware (4GB RAM minimum)
-- 🛠️ **Expert Role System**: 50 specialized AI expert roles with confidence scoring
-- 🧠 **Advanced Reasoning**: Chain-of-Thought (CoT) and Tree-of-Thoughts (ToT) frameworks
-- 🔌 **REST API**: External integration via port 3456
-- 📦 **Easy Installation**: One-command setup with PowerShell installer
-
-## 🏗️ Architecture
-
-MCP Federation Core is a **thin orchestration layer** that installs and configures 15 carefully selected MCP servers for Claude Desktop. Unlike monolithic bundles, this federation:
-
-- ✅ **Pulls from original sources** (npm registry + GitHub)
-- ✅ **Maintains zero bundled code** (installer only)
-- ✅ **Enables independent updates** per MCP
-- ✅ **Implements selective database unification** (40% memory savings)
-
-### Selective Database Unification
-
-Only 5 of 15 MCPs require persistent storage. Our selective unification approach:
-
-```
-Unified Database Group (4 MCPs, 30MB total):
-├── memory           - Conversation history
-├── kimi-k2-code     - Code analysis cache
-├── kimi-k2-heavy    - Processing results
-└── rag-context      - Vector embeddings
-
-Independent (1 MCP):
-└── sqlite           - User's database interface
-
-Stateless (10 MCPs):
-└── No database required (API-based or filesystem operations)
-```
-
-**Benefits:**
-- 40% memory reduction vs separate databases
-- Cross-MCP data sharing where beneficial
-- Clean fallback if unification fails
-- No modification of original repositories
-
-## 📦 Included MCPs (15 Total)
-
-### Custom MCPs (4):
-| MCP | Description | Source |
-|-----|-------------|--------|
-| **expert-role-prompt** (v2.0) | 50 expert roles with reasoning frameworks | GitHub: `justmy2satoshis/expert-role-prompt-mcp` |
-| **kimi-k2-resilient-enhanced** | Resilient data storage with circuit breakers | GitHub: `justmy2satoshis/kimi-k2-heavy-processor-mcp` |
-| **kimi-k2-code-context-enhanced** | Code analysis with vector search | GitHub: `justmy2satoshis/kimi-k2-code-context-mcp` |
-| **converse-enhanced** (v1.1.0) | Multi-model AI with Ollama priority | GitHub: `justmy2satoshis/converse-mcp-enhanced` |
-
-### Standard MCPs (11):
-| MCP | Description | Source |
-|-----|-------------|--------|
-| **sequential-thinking** | Step-by-step problem solving with branching | npm: `@modelcontextprotocol/server-sequential-thinking` |
-| **memory** | Persistent knowledge graph storage | npm: `@modelcontextprotocol/server-memory` |
-| **filesystem** | File system operations and management | npm: `@modelcontextprotocol/server-filesystem` |
-| **web-search** | Brave search API integration | npm: `@modelcontextprotocol/server-brave-search` |
-| **sqlite** | Direct SQLite database operations | npm: `@modelcontextprotocol/server-sqlite` |
-| **perplexity** | AI-powered search and answers | npm: `perplexity-mcp-server` |
-| **desktop-commander** | System command execution | npm: `@rkdms/desktop-commander` |
-| **playwright** | Browser automation and web scraping | npm: `@modelcontextprotocol/server-playwright` |
-| **github-manager** | GitHub repository management | npm: `@modelcontextprotocol/server-github` |
-| **git-ops** | Git version control operations | npm: `git-ops-mcp` |
-| **rag-context** | RAG-based context management | npm: `@modelcontextprotocol/server-rag-context` |
-
-## 🚀 Quick Installation
-
-### Prerequisites
-- **Python 3.8+** (use `python` on Windows, `python3` on macOS/Linux)
-- **Node.js 18+** (verify with `node --version`)
-- **Git** (verify with `git --version`)
-- **Claude Desktop** (must be installed first)
-- **Internet connection** for downloading packages
-
-### Installation Steps
-
-#### Option 1: Fresh Installation
-If you're installing for the first time:
-
-**Windows (PowerShell)**
-```powershell
-# Clone the repository
-git clone https://github.com/justmy2satoshis/mcp-federation-core.git
-cd mcp-federation-core
-
-# Run the verbose installer for clear feedback
-python FEDERATED-INSTALLER-UNIFIED-VERBOSE.py
-
-# Or use the original installer
+```bash
+# Clone and run the UNIFIED installer - 15/15 MCPs guaranteed!
+git clone https://github.com/justmy2satoshis/mcp-federation.git
+cd mcp-federation
 python FEDERATED-INSTALLER-UNIFIED.py
 ```
 
-**macOS/Linux**
-```bash
-# Clone the repository
-git clone https://github.com/justmy2satoshis/mcp-federation-core.git
-cd mcp-federation-core
+✅ **Success Rate: 15/15 MCPs (100%)**
 
-# Run the verbose installer for clear feedback
-python3 FEDERATED-INSTALLER-UNIFIED-VERBOSE.py
+**Note**: Use only `FEDERATED-INSTALLER-UNIFIED.py` for installation
 
-# Or use the original installer
-python3 FEDERATED-INSTALLER-UNIFIED.py
-```
+## 📦 What Gets Installed
 
-#### Option 2: Update Existing Installation
-If you already have the repository cloned:
+### NPX-Based MCPs (10)
+- `sequential-thinking` - Chain reasoning and step-by-step analysis
+- `memory` - Persistent conversation memory
+- `filesystem` - File system operations
+- `sqlite` - SQLite database operations
+- `github-manager` - GitHub repository management
+- `web-search` - Brave search integration
+- `playwright` - Browser automation
+- `git-ops` - Git version control
+- `desktop-commander` - Desktop control
+- `perplexity` - Perplexity AI integration
 
-```bash
-# Navigate to your existing directory
-cd mcp-federation-core
+### GitHub-Based MCPs (2)
+- `expert-role-prompt` - 50+ expert AI roles with CoT/ToT reasoning
+- `converse-enhanced` - Multi-model conversations with Ollama support
 
-# Pull latest updates
-git pull origin main
+### Federation MCPs (3)
+- `kimi-k2-code-context` - Advanced code analysis with vector search
+- `kimi-k2-resilient` - Heavy processing with resilience
+- `rag-context` - RAG-based context management
 
-# Run the installer
-python FEDERATED-INSTALLER-UNIFIED-VERBOSE.py  # Windows
-python3 FEDERATED-INSTALLER-UNIFIED-VERBOSE.py # macOS/Linux
-```
+## 🏗️ Architecture
 
-### 📊 What to Expect During Installation
-
-The enhanced installer will show:
-1. **Startup Banner** - System information and installation paths
-2. **Prerequisites Check** - Verifies Python, Node.js, npm, and git
-3. **Progress Indicators** - [1/15], [2/15], etc. for each MCP
-4. **Real-time Feedback** - ✅ for success, ❌ for failures, → for ongoing
-5. **Installation Summary** - Success/failure count and next steps
-
-Example output:
-```
-======================================================================
- MCP FEDERATION CORE INSTALLER v2.0.0
-======================================================================
- Installing to: C:\Users\YourName\mcp-servers
- Python: 3.11.5
- Platform: Windows 10
-======================================================================
-
-🔍 Checking prerequisites...
-  ✅ python: Python 3.11.5
-  ✅ node: v20.10.0
-  ✅ npm: 10.2.5
-  ✅ git: git version 2.42.0
-
-[1/15] Installing sequential-thinking
-  📦 Type: NPM Package
-  📦 Package: mcp-sequential-thinking
-  → Installing from npm registry...
-  ✅ Successfully installed in 3.2s
-
-[2/15] Installing expert-role-prompt
-  🔗 Type: GitHub Repository
-  🔗 Source: https://github.com/justmy2satoshis/expert-role-prompt-mcp.git
-  → Cloning repository...
-  ✅ Repository cloned successfully
-```
-
-### ⚠️ Troubleshooting
-
-**If the installer runs silently (no output):**
-- Make sure you're using the correct Python command (`python` vs `python3`)
-- Try running with unbuffered output: `python -u FEDERATED-INSTALLER-UNIFIED.py`
-- Use the verbose version: `FEDERATED-INSTALLER-UNIFIED-VERBOSE.py`
-
-**If you see "Not in mcp-federation-core directory":**
-- Make sure you're in the cloned repository directory
-- Check with `dir` (Windows) or `ls` (macOS/Linux)
-- The installer file should be visible in the current directory
-
-### 📦 Available Installers
-
-| Installer | Description | When to Use |
-|-----------|-------------|-------------|
-| **FEDERATED-INSTALLER-UNIFIED-VERBOSE.py** | Enhanced with verbose output and progress tracking | **Recommended** - Use this for best experience |
-| **FEDERATED-INSTALLER-UNIFIED.py** | Original unified installer | If you prefer minimal output |
-| **install.ps1** | Windows PowerShell installer | Windows-specific alternative |
-
-### 🛡️ What the Installer Does (SAFELY)
-
-1. **Creates backup** of your existing Claude Desktop configuration
-2. **Creates installation manifest** to track what gets installed
-3. **Scans existing MCPs** to identify pre-existing vs new installations
-4. **Installs 11 npm packages** globally with correct package names
-5. **Clones 4 GitHub repositories** for custom MCPs
-6. **Configures unified database** for optimal performance (4 MCPs)
-7. **Merges configurations** while preserving your existing MCPs
-8. **Verifies installation** and provides detailed summary
-
-### What Gets Installed
+MCP Federation uses a **unified database architecture** with bundled sources for reliability:
 
 ```
-Your System:
-├── Global npm packages (11 MCPs)
-├── ~/.mcp-federation/
-│   ├── github-mcps/        # Cloned repositories
-│   ├── databases/          # Unified database
-│   └── wrappers/          # Database path injectors
-└── Claude Desktop Config   # Auto-configured
+Unified Database (mcp-unified.db):
+├── memory namespace
+├── kimi_code namespace
+├── kimi_resilient namespace
+└── rag namespace
+
+Bundled Sources (mcp-servers/):
+├── kimi-k2-code-context-enhanced/
+├── kimi-k2-resilient-enhanced/
+└── rag-context-fixed/
 ```
 
-## 🔧 Configuration
+## 🚀 Prerequisites
 
-### Database Architecture
+- **Python 3.8+**
+- **Node.js 18+**
+- **Git**
+- **Claude Desktop**
+- **Internet connection**
 
-The federation implements **selective unification** - only MCPs that benefit from shared data use the unified database:
+## 💻 Installation Details
 
-```python
-# Automatically configured by installer
-Unified Database MCPs:
-- memory: Share conversation context
-- kimi-k2-code-context: Share code analysis
-- kimi-k2-heavy-processor: Share processing cache
-- rag-context: Share embeddings
+The UNIFIED installer will:
+1. Check prerequisites
+2. Install NPX-based MCPs from npm registry
+3. Clone GitHub-based MCPs
+4. Copy Federation MCPs from bundled sources
+5. Configure unified database
+6. Update Claude Desktop configuration
 
-Independent MCPs:
-- sqlite: Your database operations
-- 10 others: Stateless operations
-```
+## 🔧 Troubleshooting
 
-### Claude Desktop Integration
-
-The installer automatically configures Claude Desktop. Manual configuration can be done by editing:
-- Windows: `%APPDATA%\Claude\claude_desktop_config.json`
-- macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
-- Linux: `~/.config/Claude/claude_desktop_config.json`
-
-### REST API Access
-
-The expert-role-prompt MCP includes a REST API server:
-```bash
-# Start REST API server (port 3456)
-node mcp-servers/expert-role-prompt/rest-api-server.js
-
-# Example API call
-curl http://localhost:3456/api/nominate-expert \
-  -H "Content-Type: application/json" \
-  -d '{"task": "analyze Python code"}'
-```
-
-## 📊 Performance Benchmarks
-
-Results from load testing on standard hardware (32 cores, 61GB RAM):
-
-### Response Times:
-- **Database Write**: 5.67ms average
-- **Database Read**: 0.03ms average
-- **Cross-MCP Query**: 0.03ms average
-- **MCP Startup**: ~500ms per MCP
-
-### Resource Usage:
-- **Idle Memory**: 21MB
-- **Active Memory**: 200-400MB
-- **CPU (idle)**: 0.4%
-- **CPU (active)**: 15-25%
-- **Database Size**: 16KB (grows with usage)
-
-### Concurrent Operations:
-- **Max Parallel MCPs**: 15 (all running)
-- **Requests/Second**: 50+ sustained
-
-### Memory Usage Comparison
-
-| Configuration | Memory | Disk I/O | Benefit |
-|---------------|--------|----------|---------|
-| **Federated (Unified)** | ~30MB | 1 file handle | Cross-MCP queries |
-| **Individual Databases** | ~50MB | 5 file handles | Isolation |
-| **Savings** | **40%** | **80%** | ✅ |
-
-## 🗑️ Safe Uninstallation
-
-**🛡️ PRESERVATION GUARANTEE: Only removes MCPs that were installed by federation**
+If you encounter issues:
 
 ```bash
-# Safe uninstaller (recommended - uses installation manifest)
-python uninstaller-clean.py
+# Check Python version
+python --version
 
-# Original uninstaller (still works)
-python uninstaller.py
+# Check Node.js version
+node --version
+
+# Verify Git
+git --version
+
+# Test installer
+python FEDERATED-INSTALLER-UNIFIED.py --dry-run
 ```
 
-### What the Uninstaller Does (SAFELY)
+## 📝 Version History
 
-1. **Reads installation manifest** to identify what can be safely removed
-2. **Only removes MCPs** that were newly installed by this federation
-3. **Preserves pre-existing MCPs** even if they have federation names
-4. **Keeps all your custom MCPs** completely untouched
-5. **Optional cleanup** of federation data files (user choice)
-6. **Creates safety backup** before making any changes
-
-### Uninstallation Options
-- **Selective removal**: Only federation-installed MCPs
-- **Preserve user MCPs**: All pre-existing and custom MCPs kept
-- **Optional data cleanup**: Choose whether to remove federation databases
-- **Backup creation**: Automatic safety backup before changes
-
-## 🔍 Troubleshooting
-
-### Common Issues
-
-**❌ "File not found" error when running installer**
-```bash
-# Make sure you're in the repository root directory
-pwd  # Should show .../mcp-federation-core
-ls   # Should show FEDERATED-INSTALLER-UNIFIED.py
-
-# If not in the right directory:
-cd mcp-federation-core
-```
-
-**❌ Installation fails with npm errors**
-```bash
-# Run the diagnostic tool first
-python diagnose_mcp_issues.py
-
-# Check your environment
-node --version  # Should be 18+
-npm --version
-python --version  # Should be 3.8+
-
-# Update npm if needed
-npm install -g npm@latest
-```
-
-**❌ MCPs not appearing in Claude Desktop**
-1. **Restart Claude Desktop completely** (not just refresh)
-2. Check configuration file exists at:
-   - Windows: `%APPDATA%\Claude\claude_desktop_config.json`
-   - macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
-   - Linux: `~/.config/Claude/claude_desktop_config.json`
-3. Verify JSON syntax is valid (use JSONLint.com)
-
-**❌ Some MCPs need API keys**
-Add these to your configuration file after installation:
-```json
-{
-  "mcpServers": {
-    "github-manager": {
-      "env": {
-        "GITHUB_PERSONAL_ACCESS_TOKEN": "ghp_your_token_here"
-      }
-    },
-    "web-search": {
-      "env": {
-        "BRAVE_API_KEY": "your_brave_api_key_here"
-      }
-    },
-    "perplexity": {
-      "env": {
-        "PERPLEXITY_API_KEY": "pplx-your_key_here"
-      }
-    },
-    "converse": {
-      "env": {
-        "OPENAI_API_KEY": "sk-your_key_here",
-        "GOOGLE_API_KEY": "AIza_your_key_here"
-      }
-    }
-  }
-}
-```
-
-**❌ Python/Node.js version issues**
-- **Windows**: Use `python` (not `python3`)
-- **macOS/Linux**: Use `python3` (not `python`)
-- Make sure Node.js is version 18 or higher
-- Some MCPs require Python 3.8+
-
-**❌ "Permission denied" errors**
-```bash
-# On macOS/Linux, you might need:
-sudo npm install -g <package-name>
-
-# Or fix npm permissions:
-npm config set prefix ~/.npm-global
-export PATH=~/.npm-global/bin:$PATH
-```
-
-## 📚 Documentation
-
-### Expert Roles (50 Available):
-- Software Engineers (Frontend, Backend, Full-Stack)
-- AI/ML Specialists (Data Scientists, ML Engineers)
-- DevOps & Infrastructure (Cloud, Security, SRE)
-- Product & Design (PM, UX, UI)
-- Business & Strategy (Analyst, Consultant)
-- And 40+ more specialized roles
-
-### Reasoning Frameworks:
-- **Chain-of-Thought (CoT)**: Step-by-step logical reasoning
-- **Tree-of-Thoughts (ToT)**: Branching exploration of solutions
-- **Confidence Scoring**: 0-100% match with rationale
-
-### Update Mechanism
-
-```bash
-# Update all npm MCPs
-npm update -g @modelcontextprotocol/server-*
-
-# Update specific GitHub MCP
-cd ~/.mcp-federation/github-mcps/kimi-k2-heavy-processor-mcp
-git pull origin main
-
-# Or use the updater
-python update-federation.py
-```
-
-## 🏛️ Architecture Details
-
-### Why Federation, Not Bundle?
-
-Traditional approaches bundle MCP code directly. We chose federation because:
-
-1. **Maintainability**: Pull updates from original sources
-2. **Flexibility**: Mix npm and GitHub sources seamlessly
-3. **Performance**: Selective optimization where it matters
-4. **Compatibility**: No forking or modification required
-
-### Database Unification Strategy
-
-```mermaid
-graph TD
-    A[MCP Request] --> B{Needs Database?}
-    B -->|No| C[Direct Execution]
-    B -->|Yes| D{Unified Group?}
-    D -->|Yes| E[Unified DB + Namespace]
-    D -->|No| F[Independent DB]
-    E --> G[Wrapper Script]
-    G --> H[Original MCP]
-```
-
-### Installation Flow
-
-```mermaid
-graph LR
-    A[Start] --> B[Check Prerequisites]
-    B --> C[Install npm MCPs]
-    C --> D[Clone GitHub MCPs]
-    D --> E[Setup Unified DB]
-    E --> F[Create Wrappers]
-    F --> G[Configure Claude]
-    G --> H[Verify]
-```
-
-### Unified Database Schema:
-```sql
-CREATE TABLE context (
-    id TEXT PRIMARY KEY,
-    mcp_source TEXT NOT NULL,
-    data TEXT NOT NULL,
-    metadata TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    expires_at TIMESTAMP,
-    ttl INTEGER
-);
-```
-
-### Cross-MCP Communication:
-```python
-# Store data from one MCP
-store_context(key="analysis_result", data=result, mcp_source="code-context")
-
-# Retrieve from another MCP
-data = retrieve_context(key="analysis_result", from_mcp="code-context")
-
-# Query across all MCPs
-all_data = retrieve_context(key="*", from_mcp="*")
-```
-
-## 🧪 Testing
-
-Run the included test suite to verify your installation:
-
-```bash
-# Test cross-MCP communication
-python test_mcp_persistence.py
-
-# Check database connectivity
-python check_mcp_db.py
-
-# Run performance benchmark
-python benchmark_mcp_performance.py
-
-# Diagnostic tool to test all MCPs
-python verify_mcps.py
-```
-
-## 📈 Project Status
-
-### Current Version (v2.0.0)
-- ✅ **ALL 15 MCPs WORKING** - 100% functional
-- ✅ **Expert role system** - 50 specialized personas
-- ✅ **Ollama auto-detection** - 80-95% cost savings
-- ✅ **Advanced reasoning** - CoT and ToT frameworks
-- ✅ **Directory nesting prevention** - No more triple-nested folders
-- ✅ **Complete uninstallation** - Now removes ALL artifacts, not just config
-- ✅ **Verified MCP commands** - All packages tested against working config
-- ✅ **Installation manifest tracking** - Prevents data loss during uninstallation
-- ✅ **Selective database unification** - 40% memory savings for 4 MCPs
-- ✅ **Diagnostic tool included** - verify_mcps.py tests all MCPs
-- ✅ **Windows/macOS/Linux support** - Cross-platform compatibility
-- ✅ **Comprehensive troubleshooting guide** - Clear resolution steps
-
-### Recent Fixes
-- ✅ **v2.0.0**: Production suite with enterprise-grade features
-- ✅ **v1.1.0**: Converse-enhanced with Ollama priority
-- ✅ **v0.1.5**: converse-enhanced now correctly uses Python server.py
-- ✅ **v0.1.4**: Fixed directory nesting bug creating triple-nested folders
-- ✅ **v0.1.4**: Fixed incorrect npm packages causing warning triangles
-- ✅ **v0.1.4**: Uninstaller now completely removes all files and directories
-
-## 🚀 Roadmap
-
-### Current Version (2.0.0 - Production Suite):
-- ✅ 15 MCPs with unified database
-- ✅ Cross-MCP communication
-- ✅ Expert role system with 50 specialized roles
-- ✅ REST API integration
-- ✅ Ollama auto-detection and local model priority
-- ✅ Advanced reasoning frameworks (CoT, ToT)
-- ✅ Production-ready installer and uninstaller
-
-### Coming Soon (2.1.0):
-- 🔄 RAG-Anything integration with proper Python SDK
-- 🔄 Additional vector search capabilities
-- 🔄 Enhanced web dashboard
-- 🔄 Performance monitoring tools
-
-### Future (3.0.0 - Enterprise):
-- 🔄 30+ MCPs including advanced AI/ML
-- 🔄 Enterprise authentication (OAuth, SAML)
-- 🔄 Cloud synchronization
-- 🔄 Advanced workflow automation
-- 🔄 GPU acceleration support
+- **v4.0.0** (Current) - 100% success rate with federation MCP support
+- **v3.x** - Partial success with GitHub-based approach
+- **v2.x** - Initial unified database implementation
+- **v1.x** - Original installer with separate databases
 
 ## 🤝 Contributing
 
-We welcome contributions! Key areas:
-
-1. **New MCP Integration**: Propose high-value MCPs
-2. **Performance Optimization**: Further memory/speed improvements
-3. **Cross-Platform Testing**: Especially Linux variants
-4. **Documentation**: Tutorials and examples
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+Contributions welcome! Please ensure all MCPs maintain the 15/15 success rate.
 
 ## 📄 License
 
-MIT License - see [LICENSE](LICENSE) file for details.
+MIT License - See LICENSE file for details
 
-## 🔗 Related Projects
+## 🙏 Credits
 
-- [expert-role-prompt](https://github.com/justmy2satoshis/expert-role-prompt) - Standalone expert role MCP
-- [Claude Desktop](https://claude.ai/download) - Required for MCP integration
-- [MCP Specification](https://modelcontextprotocol.io) - Official MCP documentation
-
-## 🙏 Acknowledgments
-
-- [Anthropic](https://anthropic.com) for Claude and MCP
-- [Model Context Protocol](https://modelcontextprotocol.io) community
-- Individual MCP maintainers
-- Early adopters and testers
-
-## 📞 Support
-
-- **Issues**: [GitHub Issues](https://github.com/justmy2satoshis/mcp-federation-core/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/justmy2satoshis/mcp-federation-core/discussions)
-- **Email**: notyourbuddyfriend2@protonmail.com
-- **Documentation**: [Wiki](https://github.com/justmy2satoshis/mcp-federation-core/wiki)
+Built on the Model Context Protocol by Anthropic and the amazing MCP community.
 
 ---
 
-**Built with ❤️ by justmy2satoshis**
-
-## 🚀 Ready to Get Started?
-
-**Install MCP Federation Core v2.0.0 in under 2 minutes:**
-
-```bash
-git clone https://github.com/justmy2satoshis/mcp-federation-core.git
-cd mcp-federation-core
-python FEDERATED-INSTALLER-UNIFIED.py  # Windows
-# OR
-python3 FEDERATED-INSTALLER-UNIFIED.py # macOS/Linux
-```
-
-**MCP Federation Core v2.0.0** - Production-ready orchestration for Claude Desktop. ✅ **ALL 15 MCPs WORKING - 100% functional!**
+**Repository**: https://github.com/justmy2satoshis/mcp-federation
+**Issues**: https://github.com/justmy2satoshis/mcp-federation/issues

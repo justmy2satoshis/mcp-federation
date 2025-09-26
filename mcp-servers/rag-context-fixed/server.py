@@ -20,7 +20,7 @@ from dataclasses import dataclass, field
 # MCP imports
 from mcp.server import Server
 from mcp.server.models import InitializationOptions
-import mcp.server.stdio
+from mcp.server.stdio import stdio_server
 import mcp.types as types
 
 # Configure logging
@@ -292,7 +292,7 @@ async def main():
     """Run the RAG Context MCP server"""
     logger.info("Starting RAG Context v3.2 server...")
     
-    async with mcp.server.stdio.stdio_server() as (read_stream, write_stream):
+    async with stdio_server() as (read_stream, write_stream):
         await server.run(
             read_stream,
             write_stream,
