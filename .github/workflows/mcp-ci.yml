@@ -5,6 +5,7 @@ on:
     branches: [ main, develop ]
   pull_request:
     branches: [ main ]
+  workflow_dispatch:  # Allows manual trigger from GitHub Actions tab
   schedule:
     - cron: '0 0 * * *'  # Daily validation
 
@@ -218,7 +219,7 @@ jobs:
           echo "- Production installer validated" >> SUMMARY.md
           echo "- No test contamination found" >> SUMMARY.md
           echo "- Complete separation maintained" >> SUMMARY.md
-          echo "- Windows compatibility tested (10 configurations)" >> SUMMARY.md
+          echo "- Windows compatibility tested (12 configurations)" >> SUMMARY.md
           echo "- Security scan passed (Python cache excluded)" >> SUMMARY.md
           echo "" >> SUMMARY.md
           echo "## Test Matrix" >> SUMMARY.md
